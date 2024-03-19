@@ -13,3 +13,19 @@ type User struct {
 	Photos          []Photo       `json:"photos"`
 	Comments        []Comment     `json:"comments"`
 }
+
+type UserRequest struct {
+	Username        string `json:"username" form:"username" validate:"required"`
+	Email           string `json:"email" form:"email" validate:"required,email"`
+	Password        string `json:"password" form:"password" validate:"required,min=6"`
+	Age             int    `json:"age" form:"age" validate:"required,numeric,gt=8"`
+	ProfileImageUrl string `json:"profile_image_url" form:"profile_image_url" validate:"url"`
+}
+
+type UserResponse struct {
+	ID              uint    `json:"id"`
+	Username        string  `json:"username"`
+	Email           string  `json:"email"`
+	Age             int     `json:"age"`
+	ProfileImageUrl *string `json:"profile_image_url"`
+}
