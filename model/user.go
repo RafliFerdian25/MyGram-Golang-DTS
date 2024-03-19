@@ -4,8 +4,8 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Username        string        `json:"username" gorm:"unique;not null;size:50"`
-	Email           string        `json:"email" gorm:"unique;not null;size:150"`
+	Username        string        `json:"username" gorm:"uniqueIndex;not null;size:50"`
+	Email           string        `json:"email" gorm:"uniqueIndex;not null;size:150"`
 	Password        string        `json:"password" gorm:"not null"`
 	Age             int           `json:"age" gorm:"not null;type:int"`
 	ProfileImageUrl *string       `json:"profile_image_url"`
@@ -28,4 +28,9 @@ type UserResponse struct {
 	Email           string  `json:"email"`
 	Age             int     `json:"age"`
 	ProfileImageUrl *string `json:"profile_image_url"`
+}
+
+type UserLoginRequest struct {
+	Email    string `json:"email" form:"email" validate:"required,email"`
+	Password string `json:"password" form:"password" validate:"required"`
 }

@@ -55,41 +55,40 @@ func (u *UserController) CreateUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, userResponse)
 }
 
-// func (u *UserController) LoginUser(c gin.Context) error {
-// 	var user model.User
-// 	err := c.Bind(&user)
-// 	if err != nil {
-// 		return c.JSON(http.StatusInternalServerError, gin.Map{
-// 			"message": "fail bind data",
-// 			"error":   err.Error(),
-// 		})
-// 	}
+func (u *UserController) LoginUser(ctx *gin.Context) {
+	var userRequest model.UserLoginRequest
+	err := ctx.Bind(&userRequest)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail bind data",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	user, err = u.UserService.LoginUser(user)
-// 	if err != nil {
-// 		return c.JSON(http.StatusInternalServerError, gin.Map{
-// 			"message": "fail login",
-// 			"error":   err.Error(),
-// 		})
-// 	}
+	// validate data user
+	validator := helper.NewValidator()
 
-// 	token, errToken := helper.CreateToken(user.ID, user.Name)
+	err = validator.Validate(userRequest)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request format",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	if errToken != nil {
-// 		return c.JSON(http.StatusInternalServerError, gin.Map{
-// 			"message": "fail create token",
-// 			"error":   errToken,
-// 		})
-// 	}
+	var token string
+	token, err = u.UserService.LoginUser(userRequest)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail login",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	userResponse := dto.UserResponseDTO{
-// 		Name:  user.Name,
-// 		Email: user.Email,
-// 		Token: token,
-// 	}
-
-// 	return c.JSON(200, gin.Map{
-// 		"message": "success login",
-// 		"user":    userResponse,
-// 	})
-// }
+	ctx.JSON(http.StatusOK, gin.H{
+		"token": token,
+	})
+}

@@ -33,15 +33,12 @@ func (u *UserRepository) CreateUser(user model.UserRequest) (model.User, error) 
 }
 
 // LoginUser implements UserRepository
-// func (u *UserRepository) LoginUser(user model.User) (model.User, error) {
-// 	var userLogin model.User
-// 	err := u.db.Model(&model.User{}).First(&userLogin, "email = ?", user.Email).Error
-// 	if err != nil {
-// 		return model.User{}, err
-// 	}
-// 	match := helper.CheckPasswordHash(user.Password, userLogin.Password)
-// 	if !match {
-// 		return model.User{}, errors.New(constantError.ErrorEmailOrPasswordNotMatch)
-// 	}
-// 	return userLogin, nil
-// }
+func (u *UserRepository) LoginUser(userLogin model.UserLoginRequest) (model.User, error) {
+	user := model.User{}
+	err := u.db.Where("email = ?", userLogin.Email).First(&user).Error
+	if err != nil {
+		return model.User{}, err
+	}
+
+	return user, nil
+}

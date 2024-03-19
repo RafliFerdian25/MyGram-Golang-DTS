@@ -32,7 +32,7 @@ func New(db *gorm.DB) *gin.Engine {
 
 	// User Routes
 	app.POST("/users/register", userController.CreateUser)
-	// app.POST("/login", userController.LoginUser)
+	app.POST("/users/login", userController.LoginUser)
 
 	return app
 }
