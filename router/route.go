@@ -36,7 +36,7 @@ func New(db *gorm.DB) *gin.Engine {
 	{
 		users.Use(middleware.Authentication())
 		users.PUT("/", userController.UpdateUser)
-		// users.DELETE("/", userController.DeleteUser)
+		users.DELETE("/", userController.DeleteUser)
 	}
 
 	return app

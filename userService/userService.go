@@ -5,7 +5,6 @@ import (
 	"MyGram-Golang-DTS/model"
 	"MyGram-Golang-DTS/repo/userRepository"
 	"errors"
-	"fmt"
 
 	"github.com/jinzhu/copier"
 )
@@ -51,8 +50,6 @@ func (u *UserService) LoginUser(userLogin model.UserLoginRequest) (string, error
 	if err != nil {
 		return "", err
 	}
-	fmt.Println(user)
-	fmt.Println(userLogin)
 
 	match := helper.CheckPasswordHash(userLogin.Password, user.Password)
 	if !match {
@@ -82,4 +79,15 @@ func (u *UserService) UpdateUser(userRequest model.UserUpdateRequest, userID uin
 	}
 
 	return userResponse, nil
+}
+
+// delete user
+func (u *UserService) DeleteUser(userID uint) error {
+	// call repository to delete user
+	err := u.userRepo.DeleteUser(userID)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

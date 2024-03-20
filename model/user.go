@@ -9,9 +9,9 @@ type User struct {
 	Password        string        `json:"password" gorm:"not null"`
 	Age             int           `json:"age" gorm:"not null;type:int"`
 	ProfileImageUrl string        `json:"profile_image_url"`
-	SocialMedias    []SocialMedia `json:"social_medias"`
-	Photos          []Photo       `json:"photos"`
-	Comments        []Comment     `json:"comments"`
+	SocialMedias    []SocialMedia `json:"social_medias" gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Photos          []Photo       `json:"photos" gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
+	Comments        []Comment     `json:"comments" gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 
 type UserRequest struct {
@@ -40,9 +40,4 @@ type UserUpdateRequest struct {
 	Email           string `json:"email" form:"email" validate:"required,email"`
 	Age             int    `json:"age" form:"age" validate:"required,numeric,gt=8"`
 	ProfileImageUrl string `json:"profile_image_url" form:"profile_image_url" validate:"omitempty,url"`
-}
-
-type UserToken struct {
-	ID    uint   `json:"id"`
-	Email string `json:"email"`
 }

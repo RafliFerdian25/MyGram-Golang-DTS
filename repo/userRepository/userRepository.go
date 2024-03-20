@@ -2,8 +2,6 @@ package userRepository
 
 import (
 	"MyGram-Golang-DTS/model"
-	"errors"
-	"fmt"
 
 	"gorm.io/gorm"
 )
@@ -52,9 +50,6 @@ func (u *UserRepository) UpdateUser(userRequest model.UserUpdateRequest, userID 
 	// Mencari pengguna dengan userID yang diberikan
 	err := u.db.First(&user, userID).Error
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return model.User{}, fmt.Errorf("user with ID %d not found", userID)
-		}
 		return model.User{}, err
 	}
 
@@ -68,4 +63,13 @@ func (u *UserRepository) UpdateUser(userRequest model.UserUpdateRequest, userID 
 		return model.User{}, err
 	}
 	return user, nil
+}
+
+// DeleteUser implements UserRepository
+func (u *UserRepository) DeleteUser(userID uint) error {
+	err := u.db.Unscoped().Delete(&model.User{}, userID).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }

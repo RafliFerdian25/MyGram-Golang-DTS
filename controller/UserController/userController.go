@@ -133,3 +133,21 @@ func (u *UserController) UpdateUser(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, userResponse)
 }
+
+func (u *UserController) DeleteUser(ctx *gin.Context) {
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := uint(userData["id"].(float64))
+
+	err := u.UserService.DeleteUser(userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail delete user",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "success delete user",
+	})
+}
