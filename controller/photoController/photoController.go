@@ -152,10 +152,22 @@ func (p *PhotoController) UpdatePhoto(ctx *gin.Context) {
 }
 
 func (p *PhotoController) DeletePhoto(ctx *gin.Context) {
-	photoData := ctx.MustGet("photoData").(jwt.MapClaims)
-	photoID := uint(photoData["id"].(float64))
+	// get photo id from param
+	paramPhotoID := ctx.Param("id")
+	photoID, err := strconv.Atoi(paramPhotoID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid photo id",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-	err := p.PhotoService.DeletePhoto(photoID, uint(photoID))
+	// get user data from token
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := uint(userData["id"].(float64))
+
+	err = p.PhotoService.DeletePhoto(uint(photoID), userID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "fail delete photo",

@@ -71,10 +71,11 @@ func (u *PhotoRepository) UpdatePhoto(photo model.PhotoRequest, photoID uint) (m
 }
 
 // DeletePhoto implements PhotoRepository
-// func (u *PhotoRepository) DeletePhoto(photoID uint) error {
-// 	err := u.db.Unscoped().Delete(&model.Photo{}, photoID).Error
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+func (u *PhotoRepository) DeletePhoto(photoID uint) error {
+	var photo model.Photo
+	err := u.db.Unscoped().Delete(&photo, photoID).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

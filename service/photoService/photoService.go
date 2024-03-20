@@ -19,9 +19,9 @@ func NewPhotoService(photoRepository *photoRepository.PhotoRepository) *PhotoSer
 }
 
 // CreatePhoto implements PhotoService
-func (u *PhotoService) CreatePhoto(photoRequest model.PhotoRequest) (model.PhotoResponse, error) {
+func (p *PhotoService) CreatePhoto(photoRequest model.PhotoRequest) (model.PhotoResponse, error) {
 	// call repository to save photo
-	createdPhoto, err := u.photoRepo.CreatePhoto(photoRequest)
+	createdPhoto, err := p.photoRepo.CreatePhoto(photoRequest)
 	if err != nil {
 		return model.PhotoResponse{}, err
 	}
@@ -36,9 +36,9 @@ func (u *PhotoService) CreatePhoto(photoRequest model.PhotoRequest) (model.Photo
 }
 
 // get all photos
-func (u *PhotoService) GetAllPhotos() ([]model.PhotoGetResponse, error) {
+func (p *PhotoService) GetAllPhotos() ([]model.PhotoGetResponse, error) {
 	// call repository to get all photos
-	photos, err := u.photoRepo.GetAllPhotos()
+	photos, err := p.photoRepo.GetAllPhotos()
 	if err != nil {
 		return []model.PhotoGetResponse{}, err
 	}
@@ -53,9 +53,9 @@ func (u *PhotoService) GetAllPhotos() ([]model.PhotoGetResponse, error) {
 }
 
 // get photo by id
-func (u *PhotoService) GetPhotoByID(photoID uint) (model.PhotoGetResponse, error) {
+func (p *PhotoService) GetPhotoByID(photoID uint) (model.PhotoGetResponse, error) {
 	// call repository to get photo by id
-	photo, err := u.photoRepo.GetPhotoByID(photoID)
+	photo, err := p.photoRepo.GetPhotoByID(photoID)
 	if err != nil {
 		return model.PhotoGetResponse{}, err
 	}
@@ -70,18 +70,15 @@ func (u *PhotoService) GetPhotoByID(photoID uint) (model.PhotoGetResponse, error
 }
 
 // update photo
-func (u *PhotoService) UpdatePhoto(photoRequest model.PhotoRequest, photoID uint, userID uint) (model.PhotoResponse, error) {
+func (p *PhotoService) UpdatePhoto(photoRequest model.PhotoRequest, photoID uint, userID uint) (model.PhotoResponse, error) {
 	// check if photo belongs to user
-	photo, err := u.photoRepo.GetPhotoByID(photoID)
+	err := p.CheckPhotoOwner(photoID, userID)
 	if err != nil {
 		return model.PhotoResponse{}, err
 	}
-	if photo.UserID != userID {
-		return model.PhotoResponse{}, errors.New("photo not belongs to user")
-	}
 
 	// call repository to update photo
-	updatedPhoto, err := u.photoRepo.UpdatePhoto(photoRequest, photoID)
+	updatedPhoto, err := p.photoRepo.UpdatePhoto(photoRequest, photoID)
 	if err != nil {
 		return model.PhotoResponse{}, err
 	}
@@ -96,12 +93,29 @@ func (u *PhotoService) UpdatePhoto(photoRequest model.PhotoRequest, photoID uint
 }
 
 // delete photo
-func (u *PhotoService) DeletePhoto(photoID uint, userID uint) error {
-	// call repository to delete photo
-	err := u.photoRepo.DeletePhoto(photoID)
+func (p *PhotoService) DeletePhoto(photoID uint, userID uint) error {
+	// check if photo belongs to user
+	err := p.CheckPhotoOwner(photoID, userID)
 	if err != nil {
 		return err
 	}
 
+	// call repository to delete photo
+	err = p.photoRepo.DeletePhoto(photoID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (p *PhotoService) CheckPhotoOwner(photoID uint, userID uint) error {
+	photo, err := p.photoRepo.GetPhotoByID(photoID)
+	if err != nil {
+		return err
+	}
+	if photo.UserID != userID {
+		return errors.New("photo not belongs to user")
+	}
 	return nil
 }
