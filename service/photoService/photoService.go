@@ -35,9 +35,9 @@ func (u *PhotoService) CreatePhoto(photoRequest model.PhotoCreateRequest) (model
 }
 
 // get all photos
-func (u *PhotoService) GetPhotos() ([]model.PhotoGetResponse, error) {
+func (u *PhotoService) GetAllPhotos() ([]model.PhotoGetResponse, error) {
 	// call repository to get all photos
-	photos, err := u.photoRepo.GetPhotos()
+	photos, err := u.photoRepo.GetAllPhotos()
 	if err != nil {
 		return []model.PhotoGetResponse{}, err
 	}
@@ -49,6 +49,23 @@ func (u *PhotoService) GetPhotos() ([]model.PhotoGetResponse, error) {
 	}
 
 	return photoResponses, nil
+}
+
+// get photo by id
+func (u *PhotoService) GetPhotoByID(photoID uint) (model.PhotoGetResponse, error) {
+	// call repository to get photo by id
+	photo, err := u.photoRepo.GetPhotoByID(photoID)
+	if err != nil {
+		return model.PhotoGetResponse{}, err
+	}
+
+	var photoResponse model.PhotoGetResponse
+	err = copier.Copy(&photoResponse, &photo)
+	if err != nil {
+		return model.PhotoGetResponse{}, err
+	}
+
+	return photoResponse, nil
 }
 
 // update photo

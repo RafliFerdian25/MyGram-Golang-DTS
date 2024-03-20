@@ -4,6 +4,7 @@ import (
 	"MyGram-Golang-DTS/helper"
 	"MyGram-Golang-DTS/model"
 	"MyGram-Golang-DTS/service/photoService"
+	"strconv"
 
 	"net/http"
 
@@ -62,8 +63,9 @@ func (p *PhotoController) CreatePhoto(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, photoResponse)
 }
 
-func (p *PhotoController) GetPhotos(ctx *gin.Context) {
-	photos, err := p.PhotoService.GetPhotos()
+// get all photo
+func (p *PhotoController) GetAllPhotos(ctx *gin.Context) {
+	photos, err := p.PhotoService.GetAllPhotos()
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "fail get photos",
@@ -73,6 +75,30 @@ func (p *PhotoController) GetPhotos(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, photos)
+}
+
+// get photo by id
+func (p *PhotoController) GetPhotoByID(ctx *gin.Context) {
+	paramPhotoID := ctx.Param("id")
+	photoID, err := strconv.Atoi(paramPhotoID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid photo id",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	photo, err := p.PhotoService.GetPhotoByID(uint(photoID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail get photo",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, photo)
 }
 
 // func (p *PhotoController) UpdatePhoto(ctx *gin.Context) {

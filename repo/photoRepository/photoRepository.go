@@ -31,14 +31,24 @@ func (u *PhotoRepository) CreatePhoto(photo model.PhotoCreateRequest) (model.Pho
 	return photoModel, nil
 }
 
-// GetPhotos implements PhotoRepository
-func (u *PhotoRepository) GetPhotos() ([]model.PhotoGetModel, error) {
+// GetAllPhotos implements PhotoRepository
+func (u *PhotoRepository) GetAllPhotos() ([]model.PhotoGetModel, error) {
 	var photos []model.PhotoGetModel
 	err := u.db.Model(&model.Photo{}).Preload("User").Find(&photos).Error
 	if err != nil {
 		return []model.PhotoGetModel{}, err
 	}
 	return photos, nil
+}
+
+// GetPhotoByID implements PhotoRepository
+func (u *PhotoRepository) GetPhotoByID(photoID uint) (model.PhotoGetModel, error) {
+	var photo model.PhotoGetModel
+	err := u.db.Model(&model.Photo{}).Preload("User").First(&photo, photoID).Error
+	if err != nil {
+		return model.PhotoGetModel{}, err
+	}
+	return photo, nil
 }
 
 // UpdatePhoto implements PhotoRepository
