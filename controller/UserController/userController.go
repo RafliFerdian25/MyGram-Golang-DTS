@@ -3,7 +3,7 @@ package userController
 import (
 	"MyGram-Golang-DTS/helper"
 	"MyGram-Golang-DTS/model"
-	"MyGram-Golang-DTS/userService"
+	"MyGram-Golang-DTS/service/userService"
 
 	"net/http"
 

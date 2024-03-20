@@ -10,3 +10,18 @@ type Photo struct {
 	UserID   uint      `json:"user_id" gorm:"not null"`
 	Comments []Comment `json:"comments"`
 }
+
+type PhotoCreateRequest struct {
+	Title    string `json:"title" validate:"required"`
+	Caption  string `json:"caption"`
+	PhotoUrl string `json:"photo_url" validate:"required,url"`
+	UserID   uint   `json:"user_id"`
+}
+
+type PhotoResponse struct {
+	ID       uint   `json:"id"`
+	Title    string `json:"title"`
+	Caption  string `json:"caption"`
+	PhotoUrl string `json:"photo_url"`
+	UserID   uint   `json:"user_id"`
+}
