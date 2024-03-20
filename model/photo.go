@@ -11,14 +11,14 @@ type Photo struct {
 	Comments []Comment `json:"comments"`
 }
 
-type PhotoCreateRequest struct {
+type PhotoRequest struct {
 	Title    string `json:"title" validate:"required"`
 	Caption  string `json:"caption"`
 	PhotoUrl string `json:"photo_url" validate:"required,url"`
 	UserID   uint   `json:"user_id"`
 }
 
-type PhotoCreateResponse struct {
+type PhotoResponse struct {
 	ID       uint   `json:"id"`
 	Title    string `json:"title"`
 	Caption  string `json:"caption"`

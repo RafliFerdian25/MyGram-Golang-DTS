@@ -17,7 +17,7 @@ func NewPhotoRepository(db *gorm.DB) *PhotoRepository {
 }
 
 // CreatePhoto implements PhotoRepository
-func (u *PhotoRepository) CreatePhoto(photo model.PhotoCreateRequest) (model.Photo, error) {
+func (u *PhotoRepository) CreatePhoto(photo model.PhotoRequest) (model.Photo, error) {
 	photoModel := model.Photo{
 		Title:    photo.Title,
 		Caption:  photo.Caption,
@@ -52,26 +52,23 @@ func (u *PhotoRepository) GetPhotoByID(photoID uint) (model.PhotoGetModel, error
 }
 
 // UpdatePhoto implements PhotoRepository
-// func (u *PhotoRepository) UpdatePhoto(photoRequest model.PhotoUpdateRequest, photoID uint) (model.Photo, error) {
-// 	var photo model.Photo
+func (u *PhotoRepository) UpdatePhoto(photo model.PhotoRequest, photoID uint) (model.Photo, error) {
+	var photoModel model.Photo
+	err := u.db.First(&photoModel, photoID).Error
+	if err != nil {
+		return model.Photo{}, err
+	}
 
-// 	// Mencari pengguna dengan photoID yang diberikan
-// 	err := u.db.First(&photo, photoID).Error
-// 	if err != nil {
-// 		return model.Photo{}, err
-// 	}
+	photoModel.Title = photo.Title
+	photoModel.Caption = photo.Caption
+	photoModel.PhotoUrl = photo.PhotoUrl
 
-// 	photo.Photoname = photoRequest.Photoname
-// 	photo.Email = photoRequest.Email
-// 	photo.Age = photoRequest.Age
-// 	photo.ProfileImageUrl = photoRequest.ProfileImageUrl
-
-// 	err = u.db.Save(&photo).Error
-// 	if err != nil {
-// 		return model.Photo{}, err
-// 	}
-// 	return photo, nil
-// }
+	err = u.db.Save(&photoModel).Error
+	if err != nil {
+		return model.Photo{}, err
+	}
+	return photoModel, nil
+}
 
 // DeletePhoto implements PhotoRepository
 // func (u *PhotoRepository) DeletePhoto(photoID uint) error {

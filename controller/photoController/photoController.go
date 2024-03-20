@@ -23,7 +23,7 @@ func NewPhotoController(photoService *photoService.PhotoService) *PhotoControlle
 }
 
 func (p *PhotoController) CreatePhoto(ctx *gin.Context) {
-	var photoRequest model.PhotoCreateRequest
+	var photoRequest model.PhotoRequest
 	err := ctx.Bind(&photoRequest)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -101,45 +101,51 @@ func (p *PhotoController) GetPhotoByID(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, photo)
 }
 
-// func (p *PhotoController) UpdatePhoto(ctx *gin.Context) {
-// 	// bind request data
-// 	var photoRequest model.PhotoUpdateRequest
-// 	err := ctx.Bind(&photoRequest)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{
-// 			"message": "fail bind data",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+// update photo
+func (p *PhotoController) UpdatePhoto(ctx *gin.Context) {
+	paramPhotoID := ctx.Param("id")
+	photoID, err := strconv.Atoi(paramPhotoID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid photo id",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	// validate data photo
-// 	validator := helper.NewValidator()
-// 	err = validator.Validate(photoRequest)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, gin.H{
-// 			"message": "Invalid request format",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+	var photoRequest model.PhotoRequest
+	err = ctx.Bind(&photoRequest)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail bind data",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	// get photo data from token
-// 	photoData := ctx.MustGet("photoData").(jwt.MapClaims)
-// 	photoID := uint(photoData["id"].(float64))
+	// validate data photo
+	validator := helper.NewValidator()
+	err = validator.Validate(photoRequest)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request format",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	// call service to update photo
-// 	photoResponse, err := p.PhotoService.UpdatePhoto(photoRequest, photoID)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{
-// 			"message": "fail update photo",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+	// call service to update photo
+	photoResponse, err := p.PhotoService.UpdatePhoto(photoRequest, uint(photoID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail update photo",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	ctx.JSON(http.StatusOK, photoResponse)
-// }
+	ctx.JSON(http.StatusOK, photoResponse)
+}
 
 // func (u *PhotoController) DeletePhoto(ctx *gin.Context) {
 // 	photoData := ctx.MustGet("photoData").(jwt.MapClaims)
