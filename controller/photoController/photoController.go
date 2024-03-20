@@ -62,6 +62,19 @@ func (p *PhotoController) CreatePhoto(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, photoResponse)
 }
 
+func (p *PhotoController) GetPhotos(ctx *gin.Context) {
+	photos, err := p.PhotoService.GetPhotos()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail get photos",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, photos)
+}
+
 // func (p *PhotoController) UpdatePhoto(ctx *gin.Context) {
 // 	// bind request data
 // 	var photoRequest model.PhotoUpdateRequest

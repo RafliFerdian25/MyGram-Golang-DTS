@@ -18,10 +18,28 @@ type PhotoCreateRequest struct {
 	UserID   uint   `json:"user_id"`
 }
 
-type PhotoResponse struct {
+type PhotoCreateResponse struct {
 	ID       uint   `json:"id"`
 	Title    string `json:"title"`
 	Caption  string `json:"caption"`
 	PhotoUrl string `json:"photo_url"`
 	UserID   uint   `json:"user_id"`
+}
+
+type PhotoGetModel struct {
+	ID       uint   `json:"id"`
+	Title    string `json:"title"`
+	Caption  string `json:"caption"`
+	PhotoUrl string `json:"photo_url"`
+	UserID   uint   `json:"user_id"`
+	User     User   `json:"user"`
+}
+
+type PhotoGetResponse struct {
+	ID       uint                    `json:"id"`
+	Title    string                  `json:"title"`
+	Caption  string                  `json:"caption"`
+	PhotoUrl string                  `json:"photo_url"`
+	UserID   uint                    `json:"user_id"`
+	User     UserResponseAssociation `json:"user"`
 }

@@ -30,6 +30,11 @@ type UserResponse struct {
 	ProfileImageUrl *string `json:"profile_image_url"`
 }
 
+type UserResponseAssociation struct {
+	ID       uint   `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
 type UserLoginRequest struct {
 	Email    string `json:"email" form:"email" validate:"required,email"`
 	Password string `json:"password" form:"password" validate:"required"`

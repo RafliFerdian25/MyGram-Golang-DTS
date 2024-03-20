@@ -18,20 +18,37 @@ func NewPhotoService(photoRepository *photoRepository.PhotoRepository) *PhotoSer
 }
 
 // CreatePhoto implements PhotoService
-func (u *PhotoService) CreatePhoto(photoRequest model.PhotoCreateRequest) (model.PhotoResponse, error) {
+func (u *PhotoService) CreatePhoto(photoRequest model.PhotoCreateRequest) (model.PhotoCreateResponse, error) {
 	// call repository to save photo
 	createdPhoto, err := u.photoRepo.CreatePhoto(photoRequest)
 	if err != nil {
-		return model.PhotoResponse{}, err
+		return model.PhotoCreateResponse{}, err
 	}
 
-	var photoResponse model.PhotoResponse
+	var photoResponse model.PhotoCreateResponse
 	err = copier.Copy(&photoResponse, &createdPhoto)
 	if err != nil {
-		return model.PhotoResponse{}, err
+		return model.PhotoCreateResponse{}, err
 	}
 
 	return photoResponse, nil
+}
+
+// get all photos
+func (u *PhotoService) GetPhotos() ([]model.PhotoGetResponse, error) {
+	// call repository to get all photos
+	photos, err := u.photoRepo.GetPhotos()
+	if err != nil {
+		return []model.PhotoGetResponse{}, err
+	}
+
+	var photoResponses []model.PhotoGetResponse
+	err = copier.Copy(&photoResponses, &photos)
+	if err != nil {
+		return []model.PhotoGetResponse{}, err
+	}
+
+	return photoResponses, nil
 }
 
 // update photo
