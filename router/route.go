@@ -52,7 +52,7 @@ func New(db *gorm.DB) *gin.Engine {
 		photos.GET("/", photoController.GetAllPhotos)
 		photos.GET("/:id", photoController.GetPhotoByID)
 		photos.PUT("/:id", photoController.UpdatePhoto)
-		// photos.DELETE("/", photoController.DeletePhoto)
+		photos.DELETE("/", photoController.DeletePhoto)
 	}
 
 	return app

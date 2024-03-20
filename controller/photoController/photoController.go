@@ -134,8 +134,12 @@ func (p *PhotoController) UpdatePhoto(ctx *gin.Context) {
 		return
 	}
 
+	// get photo data from token
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := uint(userData["id"].(float64))
+
 	// call service to update photo
-	photoResponse, err := p.PhotoService.UpdatePhoto(photoRequest, uint(photoID))
+	photoResponse, err := p.PhotoService.UpdatePhoto(photoRequest, uint(photoID), userID)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "fail update photo",
@@ -147,20 +151,20 @@ func (p *PhotoController) UpdatePhoto(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, photoResponse)
 }
 
-// func (u *PhotoController) DeletePhoto(ctx *gin.Context) {
-// 	photoData := ctx.MustGet("photoData").(jwt.MapClaims)
-// 	photoID := uint(photoData["id"].(float64))
+func (p *PhotoController) DeletePhoto(ctx *gin.Context) {
+	photoData := ctx.MustGet("photoData").(jwt.MapClaims)
+	photoID := uint(photoData["id"].(float64))
 
-// 	err := p.PhotoService.DeletePhoto(photoID)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{
-// 			"message": "fail delete photo",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+	err := p.PhotoService.DeletePhoto(photoID, uint(photoID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail delete photo",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	ctx.JSON(http.StatusOK, gin.H{
-// 		"message": "success delete photo",
-// 	})
-// }
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "success delete photo",
+	})
+}

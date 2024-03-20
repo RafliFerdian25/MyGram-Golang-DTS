@@ -3,6 +3,7 @@ package photoService
 import (
 	"MyGram-Golang-DTS/model"
 	"MyGram-Golang-DTS/repo/photoRepository"
+	"errors"
 
 	"github.com/jinzhu/copier"
 )
@@ -69,7 +70,16 @@ func (u *PhotoService) GetPhotoByID(photoID uint) (model.PhotoGetResponse, error
 }
 
 // update photo
-func (u *PhotoService) UpdatePhoto(photoRequest model.PhotoRequest, photoID uint) (model.PhotoResponse, error) {
+func (u *PhotoService) UpdatePhoto(photoRequest model.PhotoRequest, photoID uint, userID uint) (model.PhotoResponse, error) {
+	// check if photo belongs to user
+	photo, err := u.photoRepo.GetPhotoByID(photoID)
+	if err != nil {
+		return model.PhotoResponse{}, err
+	}
+	if photo.UserID != userID {
+		return model.PhotoResponse{}, errors.New("photo not belongs to user")
+	}
+
 	// call repository to update photo
 	updatedPhoto, err := u.photoRepo.UpdatePhoto(photoRequest, photoID)
 	if err != nil {
@@ -86,12 +96,12 @@ func (u *PhotoService) UpdatePhoto(photoRequest model.PhotoRequest, photoID uint
 }
 
 // delete photo
-// func (u *PhotoService) DeletePhoto(photoID uint) error {
-// 	// call repository to delete photo
-// 	err := u.photoRepo.DeletePhoto(photoID)
-// 	if err != nil {
-// 		return err
-// 	}
+func (u *PhotoService) DeletePhoto(photoID uint, userID uint) error {
+	// call repository to delete photo
+	err := u.photoRepo.DeletePhoto(photoID)
+	if err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	return nil
+}
