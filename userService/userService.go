@@ -66,3 +66,20 @@ func (u *UserService) LoginUser(userLogin model.UserLoginRequest) (string, error
 
 	return token, nil
 }
+
+// update user
+func (u *UserService) UpdateUser(userRequest model.UserUpdateRequest, userID uint) (model.UserResponse, error) {
+	// call repository to update user
+	updatedUser, err := u.userRepo.UpdateUser(userRequest, userID)
+	if err != nil {
+		return model.UserResponse{}, err
+	}
+
+	var userResponse model.UserResponse
+	err = copier.Copy(&userResponse, &updatedUser)
+	if err != nil {
+		return model.UserResponse{}, err
+	}
+
+	return userResponse, nil
+}

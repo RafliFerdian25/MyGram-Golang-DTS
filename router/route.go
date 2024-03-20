@@ -2,6 +2,7 @@ package routes
 
 import (
 	userController "MyGram-Golang-DTS/controller/UserController"
+	"MyGram-Golang-DTS/middleware"
 	"MyGram-Golang-DTS/repo/userRepository"
 	"MyGram-Golang-DTS/userService"
 
@@ -25,14 +26,18 @@ func New(db *gorm.DB) *gin.Engine {
 	/*
 		API Routes
 	*/
-	// config := middleware.JWTConfig{
-	// 	Claims:     &helper.JWTCustomClaims{},
-	// 	SigningKey: []byte(cfg.TOKEN_SECRET),
-	// }
 
 	// User Routes
-	app.POST("/users/register", userController.CreateUser)
-	app.POST("/users/login", userController.LoginUser)
+	users := app.Group("/users")
+	users.POST("/register", userController.CreateUser)
+	users.POST("/login", userController.LoginUser)
+
+	users.Use(middleware.Authentication())
+	{
+		users.Use(middleware.Authentication())
+		users.PUT("/", userController.UpdateUser)
+		// users.DELETE("/", userController.DeleteUser)
+	}
 
 	return app
 }

@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type UserController struct {
@@ -91,4 +92,44 @@ func (u *UserController) LoginUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{
 		"token": token,
 	})
+}
+
+func (u *UserController) UpdateUser(ctx *gin.Context) {
+	// bind request data
+	var userRequest model.UserUpdateRequest
+	err := ctx.Bind(&userRequest)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail bind data",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	// validate data user
+	validator := helper.NewValidator()
+	err = validator.Validate(userRequest)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request format",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	// get user data from token
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := uint(userData["id"].(float64))
+
+	// call service to update user
+	userResponse, err := u.UserService.UpdateUser(userRequest, userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail update user",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, userResponse)
 }

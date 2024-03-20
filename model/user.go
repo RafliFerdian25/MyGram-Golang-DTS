@@ -8,7 +8,7 @@ type User struct {
 	Email           string        `json:"email" gorm:"uniqueIndex;not null;size:150"`
 	Password        string        `json:"password" gorm:"not null"`
 	Age             int           `json:"age" gorm:"not null;type:int"`
-	ProfileImageUrl *string       `json:"profile_image_url"`
+	ProfileImageUrl string        `json:"profile_image_url"`
 	SocialMedias    []SocialMedia `json:"social_medias"`
 	Photos          []Photo       `json:"photos"`
 	Comments        []Comment     `json:"comments"`
@@ -19,7 +19,7 @@ type UserRequest struct {
 	Email           string `json:"email" form:"email" validate:"required,email"`
 	Password        string `json:"password" form:"password" validate:"required,min=6"`
 	Age             int    `json:"age" form:"age" validate:"required,numeric,gt=8"`
-	ProfileImageUrl string `json:"profile_image_url" form:"profile_image_url" validate:"url"`
+	ProfileImageUrl string `json:"profile_image_url" form:"profile_image_url" validate:"omitempty,url"`
 }
 
 type UserResponse struct {
@@ -33,4 +33,16 @@ type UserResponse struct {
 type UserLoginRequest struct {
 	Email    string `json:"email" form:"email" validate:"required,email"`
 	Password string `json:"password" form:"password" validate:"required"`
+}
+
+type UserUpdateRequest struct {
+	Username        string `json:"username" form:"username" validate:"required"`
+	Email           string `json:"email" form:"email" validate:"required,email"`
+	Age             int    `json:"age" form:"age" validate:"required,numeric,gt=8"`
+	ProfileImageUrl string `json:"profile_image_url" form:"profile_image_url" validate:"omitempty,url"`
+}
+
+type UserToken struct {
+	ID    uint   `json:"id"`
+	Email string `json:"email"`
 }

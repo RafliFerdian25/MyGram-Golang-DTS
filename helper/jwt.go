@@ -2,9 +2,9 @@ package helper
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
@@ -16,6 +16,7 @@ func GenerateToken(id uint, email string) (string, error) {
 	claims := jwt.MapClaims{
 		"id":    id,
 		"email": email,
+		"exp":   time.Now().Add(time.Minute * 15).Unix(),
 	}
 
 	jwt := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
@@ -35,29 +36,19 @@ func VerifyToken(ctx *gin.Context) (interface{}, error) {
 
 	tokenStr := strings.Split(auth, "Bearer ")[1]
 
-	fmt.Println(tokenStr)
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		return []byte(SECRETKEY), nil
 	})
 
-	switch {
-	case token.Valid:
-		fmt.Println("You look nice today")
-	case errors.Is(err, jwt.ErrTokenMalformed):
-		fmt.Println("That's not even a token")
-	case errors.Is(err, jwt.ErrTokenSignatureInvalid):
-		// Invalid signature
-		fmt.Println("Invalid signature")
-	case errors.Is(err, jwt.ErrTokenExpired) || errors.Is(err, jwt.ErrTokenNotValidYet):
-		// Token is either expired or not active yet
-		fmt.Println("Timing is everything")
-	default:
-		fmt.Println("Couldn't handle this token:", err)
+	if err != nil {
+		return nil, err
+	}
+
+	if !token.Valid {
+		return nil, errors.New("invalid token")
 	}
 
 	if _, ok := token.Claims.(jwt.MapClaims); !ok {
-		fmt.Println("2 ====> ", ok)
-
 		return nil, err
 	}
 
