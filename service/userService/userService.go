@@ -67,6 +67,9 @@ func (u *UserService) LoginUser(userLogin model.UserLoginRequest) (string, error
 	// call repository to get user
 	user, err := u.userRepo.LoginUser(userLogin)
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return "", errors.New("email or password is incorrect")
+		}
 		return "", err
 	}
 
@@ -95,7 +98,7 @@ func (u *UserService) UpdateUser(userRequest model.UserUpdateRequest, userID uin
 	}
 
 	// validate username
-	_, err = u.userRepo.GetUserByUsername(userRequest.Username)
+	user, err = u.userRepo.GetUserByUsername(userRequest.Username)
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return model.UserResponse{}, err
 	}
