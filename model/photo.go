@@ -43,3 +43,11 @@ type PhotoGetResponse struct {
 	UserID   uint                    `json:"user_id"`
 	User     UserResponseAssociation `json:"user"`
 }
+
+type PhotoResponseAssociation struct {
+	ID       uint   `json:"id"`
+	Caption  string `json:"caption"`
+	Title    string `json:"title"`
+	PhotoUrl string `json:"photo_url"`
+	UserID   uint   `json:"user_id"`
+}
