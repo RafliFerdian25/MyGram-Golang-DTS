@@ -88,21 +88,15 @@ func (c *SocialMediaService) UpdateSocialMedia(socialMediaRequest model.SocialMe
 }
 
 // delete socialMedia
-// func (c *SocialMediaService) DeleteSocialMedia(socialMediaID uint, userID uint) error {
-// 	// check if socialMedia belongs to user
-// 	err := c.CheckSocialMediaOwner(socialMediaID, userID)
-// 	if err != nil {
-// 		return err
-// 	}
+func (c *SocialMediaService) DeleteSocialMedia(socialMediaID uint) error {
+	// call repository to delete socialMedia
+	err := c.socialMediaRepo.DeleteSocialMedia(socialMediaID)
+	if err != nil {
+		return err
+	}
 
-// 	// call repository to delete socialMedia
-// 	err = c.socialMediaRepo.DeleteSocialMedia(socialMediaID)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
+	return nil
+}
 
 func (c *SocialMediaService) CheckSocialMediaOwner(socialMediaID uint, userID uint) error {
 	socialMedia, err := c.socialMediaRepo.GetSocialMediaByID(socialMediaID)

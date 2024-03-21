@@ -152,32 +152,28 @@ func (p *SocialMediaController) UpdateSocialMedia(ctx *gin.Context) {
 }
 
 // delete socialMedia
-// func (p *SocialMediaController) DeleteSocialMedia(ctx *gin.Context) {
-// 	// get socialMedia id from param
-// 	paramSocialMediaID := ctx.Param("id")
-// 	socialMediaID, err := strconv.Atoi(paramSocialMediaID)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, gin.H{
-// 			"message": "Invalid socialMedia id",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+func (p *SocialMediaController) DeleteSocialMedia(ctx *gin.Context) {
+	// get socialMedia id from param
+	paramSocialMediaID := ctx.Param("id")
+	socialMediaID, err := strconv.Atoi(paramSocialMediaID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid social media id",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	// get user data from token
-// 	userData := ctx.MustGet("userData").(jwt.MapClaims)
-// 	userID := uint(userData["id"].(float64))
+	err = p.SocialMediaService.DeleteSocialMedia(uint(socialMediaID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail delete social media",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	err = p.SocialMediaService.DeleteSocialMedia(uint(socialMediaID), userID)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{
-// 			"message": "fail delete socialMedia",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
-
-// 	ctx.JSON(http.StatusOK, gin.H{
-// 		"message": "success delete socialMedia",
-// 	})
-// }
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "success delete social media",
+	})
+}

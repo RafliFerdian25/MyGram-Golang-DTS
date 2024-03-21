@@ -87,6 +87,7 @@ func New(db *gorm.DB) *gin.Engine {
 		socialMedias.GET("/", socialMediasController.GetAllSocialMedias)
 		socialMedias.GET("/:id", middleware.SocialMediaAuthorization(socialMediaService), socialMediasController.GetSocialMediaByID)
 		socialMedias.PUT("/:id", middleware.SocialMediaAuthorization(socialMediaService), socialMediasController.UpdateSocialMedia)
+		socialMedias.DELETE("/:id", middleware.SocialMediaAuthorization(socialMediaService), socialMediasController.DeleteSocialMedia)
 	}
 
 	return app

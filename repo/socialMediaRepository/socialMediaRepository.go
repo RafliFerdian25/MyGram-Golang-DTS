@@ -69,11 +69,11 @@ func (c *SocialMediaRepository) UpdateSocialMedia(socialMediaRequest model.Socia
 }
 
 // DeleteSocialMedia implements SocialMediaRepository
-// func (u *SocialMediaRepository) DeleteSocialMedia(socialMediaID uint) error {
-// 	var socialMedia model.SocialMedia
-// 	err := u.db.Unscoped().Delete(&socialMedia, socialMediaID).Error
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+func (u *SocialMediaRepository) DeleteSocialMedia(socialMediaID uint) error {
+	var socialMedia model.SocialMedia
+	err := u.db.Unscoped().Delete(&socialMedia, socialMediaID).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
