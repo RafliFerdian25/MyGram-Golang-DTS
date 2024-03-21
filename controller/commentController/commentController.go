@@ -153,32 +153,32 @@ func (p *CommentController) UpdateComment(ctx *gin.Context) {
 }
 
 // delete comment
-// func (p *CommentController) DeleteComment(ctx *gin.Context) {
-// 	// get comment id from param
-// 	paramCommentID := ctx.Param("id")
-// 	commentID, err := strconv.Atoi(paramCommentID)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, gin.H{
-// 			"message": "Invalid comment id",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+func (p *CommentController) DeleteComment(ctx *gin.Context) {
+	// get comment id from param
+	paramCommentID := ctx.Param("id")
+	commentID, err := strconv.Atoi(paramCommentID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid comment id",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	// get user data from token
-// 	userData := ctx.MustGet("userData").(jwt.MapClaims)
-// 	userID := uint(userData["id"].(float64))
+	// get user data from token
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := uint(userData["id"].(float64))
 
-// 	err = p.CommentService.DeleteComment(uint(commentID), userID)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{
-// 			"message": "fail delete comment",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+	err = p.CommentService.DeleteComment(uint(commentID), userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail delete comment",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	ctx.JSON(http.StatusOK, gin.H{
-// 		"message": "success delete comment",
-// 	})
-// }
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "success delete comment",
+	})
+}

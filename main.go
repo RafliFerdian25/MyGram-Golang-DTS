@@ -3,7 +3,6 @@ package main
 import (
 	"MyGram-Golang-DTS/database"
 	routes "MyGram-Golang-DTS/router"
-	"fmt"
 	"log"
 	"os"
 
@@ -27,8 +26,7 @@ func main() {
 
 	err = godotenv.Load(".env")
 	if err != nil {
-		fmt.Print("Error loading .env file", err)
-		log.Fatal("Error loading .env file")
+		log.Fatal("Error loading .env file", err)
 	}
 
 	apiPort := os.Getenv("API_PORT")

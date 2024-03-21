@@ -103,21 +103,21 @@ func (c *CommentService) UpdateComment(commentRequest model.CommentUpdateRequest
 }
 
 // delete comment
-// func (p *CommentService) DeleteComment(commentID uint, userID uint) error {
-// 	// check if comment belongs to user
-// 	err := c.CheckCommentOwner(commentID, userID)
-// 	if err != nil {
-// 		return err
-// 	}
+func (c *CommentService) DeleteComment(commentID uint, userID uint) error {
+	// check if comment belongs to user
+	err := c.CheckCommentOwner(commentID, userID)
+	if err != nil {
+		return err
+	}
 
-// 	// call repository to delete comment
-// 	err = c.commentRepo.DeleteComment(commentID)
-// 	if err != nil {
-// 		return err
-// 	}
+	// call repository to delete comment
+	err = c.commentRepo.DeleteComment(commentID)
+	if err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	return nil
+}
 
 func (c *CommentService) CheckCommentOwner(commentID uint, userID uint) error {
 	comment, err := c.commentRepo.GetCommentByID(commentID)

@@ -68,7 +68,7 @@ func New(db *gorm.DB) *gin.Engine {
 		comments.GET("/", commentController.GetAllComments)
 		comments.GET("/:id", commentController.GetCommentByID)
 		comments.PUT("/:id", middleware.CommentAuthorization(commentService), commentController.UpdateComment)
-		// comments.DELETE("/:id", commentController.DeleteComment)
+		comments.DELETE("/:id", middleware.CommentAuthorization(commentService), commentController.DeleteComment)
 	}
 
 	return app

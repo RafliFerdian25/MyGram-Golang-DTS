@@ -68,11 +68,11 @@ func (c *CommentRepository) UpdateComment(commentRequest model.CommentUpdateRequ
 }
 
 // DeleteComment implements CommentRepository
-// func (u *CommentRepository) DeleteComment(commentID uint) error {
-// 	var comment model.Comment
-// 	err := u.db.Unscoped().Delete(&comment, commentID).Error
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+func (u *CommentRepository) DeleteComment(commentID uint) error {
+	var comment model.Comment
+	err := u.db.Unscoped().Delete(&comment, commentID).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
