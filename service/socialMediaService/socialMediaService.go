@@ -3,6 +3,7 @@ package socialMediaService
 import (
 	"MyGram-Golang-DTS/model"
 	"MyGram-Golang-DTS/repo/socialMediaRepository"
+	"errors"
 
 	"github.com/jinzhu/copier"
 )
@@ -53,21 +54,21 @@ func (c *SocialMediaService) GetAllSocialMedias(userID uint) ([]model.SocialMedi
 }
 
 // get socialMedia by id
-// func (c *SocialMediaService) GetSocialMediaByID(socialMediaID uint) (model.SocialMediaGetResponse, error) {
-// 	// call repository to get socialMedia by id
-// 	socialMedia, err := c.socialMediaRepo.GetSocialMediaByID(socialMediaID)
-// 	if err != nil {
-// 		return model.SocialMediaGetResponse{}, err
-// 	}
+func (c *SocialMediaService) GetSocialMediaByID(socialMediaID uint) (model.SocialMediaGetResponse, error) {
+	// call repository to get socialMedia by id
+	socialMedia, err := c.socialMediaRepo.GetSocialMediaByID(socialMediaID)
+	if err != nil {
+		return model.SocialMediaGetResponse{}, err
+	}
 
-// 	var socialMediaResponse model.SocialMediaGetResponse
-// 	err = copier.Copy(&socialMediaResponse, &socialMedia)
-// 	if err != nil {
-// 		return model.SocialMediaGetResponse{}, err
-// 	}
+	var socialMediaResponse model.SocialMediaGetResponse
+	err = copier.Copy(&socialMediaResponse, &socialMedia)
+	if err != nil {
+		return model.SocialMediaGetResponse{}, err
+	}
 
-// 	return socialMediaResponse, nil
-// }
+	return socialMediaResponse, nil
+}
 
 // update socialMedia
 // func (c *SocialMediaService) UpdateSocialMedia(socialMediaRequest model.SocialMediaUpdateRequest, socialMediaID uint, userID uint) (model.SocialMediaResponse, error) {
@@ -109,13 +110,13 @@ func (c *SocialMediaService) GetAllSocialMedias(userID uint) ([]model.SocialMedi
 // 	return nil
 // }
 
-// func (c *SocialMediaService) CheckSocialMediaOwner(socialMediaID uint, userID uint) error {
-// 	socialMedia, err := c.socialMediaRepo.GetSocialMediaByID(socialMediaID)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	if socialMedia.UserID != userID {
-// 		return errors.New("socialMedia not belongs to user")
-// 	}
-// 	return nil
-// }
+func (c *SocialMediaService) CheckSocialMediaOwner(socialMediaID uint, userID uint) error {
+	socialMedia, err := c.socialMediaRepo.GetSocialMediaByID(socialMediaID)
+	if err != nil {
+		return err
+	}
+	if socialMedia.UserID != userID {
+		return errors.New("social media not belongs to user")
+	}
+	return nil
+}

@@ -85,7 +85,7 @@ func New(db *gorm.DB) *gin.Engine {
 	{
 		socialMedias.POST("/", socialMediasController.CreateSocialMedia)
 		socialMedias.GET("/", socialMediasController.GetAllSocialMedias)
-		// socialMedias.GET("/:id", socialMediasController.GetSocialMediaByID)
+		socialMedias.GET("/:id", middleware.SocialMediaAuthorization(socialMediaService), socialMediasController.GetSocialMediaByID)
 	}
 
 	return app

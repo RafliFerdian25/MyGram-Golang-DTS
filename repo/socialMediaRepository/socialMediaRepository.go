@@ -41,14 +41,14 @@ func (c *SocialMediaRepository) GetAllSocialMedias(userID uint) ([]model.SocialM
 }
 
 // GetSocialMediaByID implements SocialMediaRepository
-// func (c *SocialMediaRepository) GetSocialMediaByID(socialMediaID uint) (model.SocialMediaGetModel, error) {
-// 	var socialMedia model.SocialMediaGetModel
-// 	err := c.db.Model(&model.SocialMedia{}).Preload("User").Preload("Photo").First(&socialMedia, socialMediaID).Error
-// 	if err != nil {
-// 		return model.SocialMediaGetModel{}, err
-// 	}
-// 	return socialMedia, nil
-// }
+func (c *SocialMediaRepository) GetSocialMediaByID(socialMediaID uint) (model.SocialMediaGetModel, error) {
+	var socialMedia model.SocialMediaGetModel
+	err := c.db.Model(&model.SocialMedia{}).Preload("User").First(&socialMedia, socialMediaID).Error
+	if err != nil {
+		return model.SocialMediaGetModel{}, err
+	}
+	return socialMedia, nil
+}
 
 // UpdateSocialMedia implements SocialMediaRepository
 // func (c *SocialMediaRepository) UpdateSocialMedia(socialMediaRequest model.SocialMediaUpdateRequest, socialMediaID uint) (model.SocialMedia, error) {

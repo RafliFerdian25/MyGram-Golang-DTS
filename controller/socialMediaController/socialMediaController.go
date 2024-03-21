@@ -4,6 +4,7 @@ import (
 	"MyGram-Golang-DTS/helper"
 	"MyGram-Golang-DTS/model"
 	"MyGram-Golang-DTS/service/socialMediaService"
+	"strconv"
 
 	"net/http"
 
@@ -80,28 +81,28 @@ func (p *SocialMediaController) GetAllSocialMedias(ctx *gin.Context) {
 }
 
 // get socialMedia by id
-// func (c *SocialMediaController) GetSocialMediaByID(ctx *gin.Context) {
-// 	paramSocialMediaID := ctx.Param("id")
-// 	socialMediaID, err := strconv.Atoi(paramSocialMediaID)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, gin.H{
-// 			"message": "Invalid socialMedia id",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+func (c *SocialMediaController) GetSocialMediaByID(ctx *gin.Context) {
+	paramSocialMediaID := ctx.Param("id")
+	socialMediaID, err := strconv.Atoi(paramSocialMediaID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid socialMedia id",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	socialMedia, err := c.SocialMediaService.GetSocialMediaByID(uint(socialMediaID))
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{
-// 			"message": "fail get socialMedia",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+	socialMedia, err := c.SocialMediaService.GetSocialMediaByID(uint(socialMediaID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail get social media",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	ctx.JSON(http.StatusOK, socialMedia)
-// }
+	ctx.JSON(http.StatusOK, socialMedia)
+}
 
 // update socialMedia
 // func (p *SocialMediaController) UpdateSocialMedia(ctx *gin.Context) {
