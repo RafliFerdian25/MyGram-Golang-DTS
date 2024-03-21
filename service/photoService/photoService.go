@@ -115,7 +115,7 @@ func (p *PhotoService) CheckPhotoOwner(photoID uint, userID uint) error {
 		return err
 	}
 	if photo.UserID != userID {
-		return errors.New("photo not belongs to user")
+		return errors.New("photo do not belong to the user")
 	}
 	return nil
 }

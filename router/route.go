@@ -63,9 +63,9 @@ func New(db *gorm.DB) *gin.Engine {
 	{
 		photos.POST("/", photoController.CreatePhoto)
 		photos.GET("/", photoController.GetAllPhotos)
-		photos.GET("/:id", photoController.GetPhotoByID)
-		photos.PUT("/:id", photoController.UpdatePhoto)
-		photos.DELETE("/:id", photoController.DeletePhoto)
+		photos.GET("/:photoId", photoController.GetPhotoByID)
+		photos.PUT("/:photoId", middleware.PhotoAuthorization(photoService), photoController.UpdatePhoto)
+		photos.DELETE("/:photoId", middleware.PhotoAuthorization(photoService), photoController.DeletePhoto)
 	}
 
 	// Comment Routes

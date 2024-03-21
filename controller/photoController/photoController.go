@@ -10,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"gorm.io/gorm"
 )
 
 type PhotoController struct {
@@ -79,7 +80,7 @@ func (p *PhotoController) GetAllPhotos(ctx *gin.Context) {
 
 // get photo by id
 func (p *PhotoController) GetPhotoByID(ctx *gin.Context) {
-	paramPhotoID := ctx.Param("id")
+	paramPhotoID := ctx.Param("photoId")
 	photoID, err := strconv.Atoi(paramPhotoID)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -91,6 +92,13 @@ func (p *PhotoController) GetPhotoByID(ctx *gin.Context) {
 
 	photo, err := p.PhotoService.GetPhotoByID(uint(photoID))
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
+				"message": "Photo not found",
+				"error":   err.Error(),
+			})
+			return
+		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "fail get photo",
 			"error":   err.Error(),
@@ -103,7 +111,7 @@ func (p *PhotoController) GetPhotoByID(ctx *gin.Context) {
 
 // update photo
 func (p *PhotoController) UpdatePhoto(ctx *gin.Context) {
-	paramPhotoID := ctx.Param("id")
+	paramPhotoID := ctx.Param("photoId")
 	photoID, err := strconv.Atoi(paramPhotoID)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -153,7 +161,7 @@ func (p *PhotoController) UpdatePhoto(ctx *gin.Context) {
 
 func (p *PhotoController) DeletePhoto(ctx *gin.Context) {
 	// get photo id from param
-	paramPhotoID := ctx.Param("id")
+	paramPhotoID := ctx.Param("photoId")
 	photoID, err := strconv.Atoi(paramPhotoID)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{

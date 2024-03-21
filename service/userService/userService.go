@@ -85,6 +85,24 @@ func (u *UserService) LoginUser(userLogin model.UserLoginRequest) (string, error
 
 // update user
 func (u *UserService) UpdateUser(userRequest model.UserUpdateRequest, userID uint) (model.UserResponse, error) {
+	// validate email
+	user, err := u.userRepo.GetUserByEmail(userRequest.Email)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return model.UserResponse{}, err
+	}
+	if err != gorm.ErrRecordNotFound && user.ID != userID {
+		return model.UserResponse{}, errors.New("email already exists")
+	}
+
+	// validate username
+	_, err = u.userRepo.GetUserByUsername(userRequest.Username)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return model.UserResponse{}, err
+	}
+	if err != gorm.ErrRecordNotFound && user.ID != userID {
+		return model.UserResponse{}, errors.New("username already exists")
+	}
+
 	// call repository to update user
 	updatedUser, err := u.userRepo.UpdateUser(userRequest, userID)
 	if err != nil {
