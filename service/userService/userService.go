@@ -7,6 +7,7 @@ import (
 	"errors"
 
 	"github.com/jinzhu/copier"
+	"gorm.io/gorm"
 )
 
 type UserService struct {
@@ -21,6 +22,24 @@ func NewUserService(userRepository *userRepository.UserRepository) *UserService 
 
 // CreateUser implements UserService
 func (u *UserService) CreateUser(userRequest model.UserRequest) (model.UserResponse, error) {
+	// validate email
+	_, err := u.userRepo.GetUserByEmail(userRequest.Email)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return model.UserResponse{}, err
+	}
+	if err != gorm.ErrRecordNotFound {
+		return model.UserResponse{}, errors.New("email already exists")
+	}
+
+	// validate username
+	_, err = u.userRepo.GetUserByUsername(userRequest.Username)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return model.UserResponse{}, err
+	}
+	if err != gorm.ErrRecordNotFound {
+		return model.UserResponse{}, errors.New("username already exists")
+	}
+
 	// hash password
 	hashedPassword, err := helper.HashPassword(userRequest.Password)
 	userRequest.Password = hashedPassword
