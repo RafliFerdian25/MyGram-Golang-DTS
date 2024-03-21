@@ -21,3 +21,19 @@ type SocialMediaResponse struct {
 	SocialMediaUrl string `json:"social_media_url"`
 	UserID         uint   `json:"user_id"`
 }
+
+type SocialMediaGetModel struct {
+	ID             uint   `json:"id"`
+	Name           string `json:"name"`
+	SocialMediaUrl string `json:"social_media_url"`
+	UserID         uint   `json:"user_id"`
+	User           User   `json:"user"`
+}
+
+type SocialMediaGetResponse struct {
+	ID             uint   `json:"id"`
+	Name           string `json:"name"`
+	SocialMediaUrl string `json:"social_media_url"`
+	UserID         uint   `json:"user_id"`
+	User           User   `json:"user"`
+}

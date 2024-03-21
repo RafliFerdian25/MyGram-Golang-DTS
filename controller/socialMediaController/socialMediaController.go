@@ -62,18 +62,22 @@ func (c *SocialMediaController) CreateSocialMedia(ctx *gin.Context) {
 }
 
 // get all socialMedia
-// func (p *SocialMediaController) GetAllSocialMedias(ctx *gin.Context) {
-// 	socialMedias, err := p.SocialMediaService.GetAllSocialMedias()
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{
-// 			"message": "fail get socialMedias",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+func (p *SocialMediaController) GetAllSocialMedias(ctx *gin.Context) {
+	// get socialMedia data from token
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := uint(userData["id"].(float64))
 
-// 	ctx.JSON(http.StatusOK, socialMedias)
-// }
+	socialMedias, err := p.SocialMediaService.GetAllSocialMedias(userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail get socialMedias",
+			"error":   err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, socialMedias)
+}
 
 // get socialMedia by id
 // func (c *SocialMediaController) GetSocialMediaByID(ctx *gin.Context) {

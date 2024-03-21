@@ -36,21 +36,21 @@ func (c *SocialMediaService) CreateSocialMedia(socialMediaRequest model.SocialMe
 }
 
 // get all socialMedias
-// func (c *SocialMediaService) GetAllSocialMedias() ([]model.SocialMediaGetResponse, error) {
-// 	// call repository to get all socialMedias
-// 	socialMedias, err := c.socialMediaRepo.GetAllSocialMedias()
-// 	if err != nil {
-// 		return []model.SocialMediaGetResponse{}, err
-// 	}
+func (c *SocialMediaService) GetAllSocialMedias(userID uint) ([]model.SocialMediaGetResponse, error) {
+	// call repository to get all socialMedias
+	socialMedias, err := c.socialMediaRepo.GetAllSocialMedias(userID)
+	if err != nil {
+		return []model.SocialMediaGetResponse{}, err
+	}
 
-// 	var socialMediaResponses []model.SocialMediaGetResponse
-// 	err = copier.Copy(&socialMediaResponses, &socialMedias)
-// 	if err != nil {
-// 		return []model.SocialMediaGetResponse{}, err
-// 	}
+	var socialMediaResponses []model.SocialMediaGetResponse
+	err = copier.Copy(&socialMediaResponses, &socialMedias)
+	if err != nil {
+		return []model.SocialMediaGetResponse{}, err
+	}
 
-// 	return socialMediaResponses, nil
-// }
+	return socialMediaResponses, nil
+}
 
 // get socialMedia by id
 // func (c *SocialMediaService) GetSocialMediaByID(socialMediaID uint) (model.SocialMediaGetResponse, error) {
