@@ -17,13 +17,13 @@ func NewCommentRepository(db *gorm.DB) *CommentRepository {
 }
 
 // CreateComment implements CommentRepository
-func (u *CommentRepository) CreateComment(comment model.CommentRequest) (model.Comment, error) {
+func (c *CommentRepository) CreateComment(comment model.CommentRequest) (model.Comment, error) {
 	commentModel := model.Comment{
 		Message: comment.Message,
 		UserID:  comment.UserID,
 		PhotoID: comment.PhotoID,
 	}
-	err := u.db.Create(&commentModel).Error
+	err := c.db.Create(&commentModel).Error
 	if err != nil {
 		return model.Comment{}, err
 	}
@@ -31,9 +31,9 @@ func (u *CommentRepository) CreateComment(comment model.CommentRequest) (model.C
 }
 
 // GetAllComments implements CommentRepository
-func (u *CommentRepository) GetAllComments() ([]model.CommentGetModel, error) {
+func (c *CommentRepository) GetAllComments() ([]model.CommentGetModel, error) {
 	var comments []model.CommentGetModel
-	err := u.db.Model(&model.Comment{}).Preload("User").Preload("Photo").Find(&comments).Error
+	err := c.db.Model(&model.Comment{}).Preload("User").Preload("Photo").Find(&comments).Error
 	if err != nil {
 		return []model.CommentGetModel{}, err
 	}
@@ -41,9 +41,9 @@ func (u *CommentRepository) GetAllComments() ([]model.CommentGetModel, error) {
 }
 
 // GetCommentByID implements CommentRepository
-func (u *CommentRepository) GetCommentByID(commentID uint) (model.CommentGetModel, error) {
+func (c *CommentRepository) GetCommentByID(commentID uint) (model.CommentGetModel, error) {
 	var comment model.CommentGetModel
-	err := u.db.Model(&model.Comment{}).Preload("User").Preload("Photo").First(&comment, commentID).Error
+	err := c.db.Model(&model.Comment{}).Preload("User").Preload("Photo").First(&comment, commentID).Error
 	if err != nil {
 		return model.CommentGetModel{}, err
 	}
@@ -51,23 +51,21 @@ func (u *CommentRepository) GetCommentByID(commentID uint) (model.CommentGetMode
 }
 
 // UpdateComment implements CommentRepository
-// func (u *CommentRepository) UpdateComment(comment model.CommentRequest, commentID uint) (model.Comment, error) {
-// 	var commentModel model.Comment
-// 	err := u.db.First(&commentModel, commentID).Error
-// 	if err != nil {
-// 		return model.Comment{}, err
-// 	}
+func (c *CommentRepository) UpdateComment(commentRequest model.CommentUpdateRequest, commentID uint) (model.Comment, error) {
+	var commentModel model.Comment
+	err := c.db.First(&commentModel, commentID).Error
+	if err != nil {
+		return model.Comment{}, err
+	}
 
-// 	commentModel.Title = comment.Title
-// 	commentModel.Caption = comment.Caption
-// 	commentModel.CommentUrl = comment.CommentUrl
+	commentModel.Message = commentRequest.Message
 
-// 	err = u.db.Save(&commentModel).Error
-// 	if err != nil {
-// 		return model.Comment{}, err
-// 	}
-// 	return commentModel, nil
-// }
+	err = c.db.Save(&commentModel).Error
+	if err != nil {
+		return model.Comment{}, err
+	}
+	return commentModel, nil
+}
 
 // DeleteComment implements CommentRepository
 // func (u *CommentRepository) DeleteComment(commentID uint) error {

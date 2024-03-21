@@ -15,6 +15,10 @@ type CommentRequest struct {
 	PhotoID uint   `json:"photo_id" validate:"required"`
 }
 
+type CommentUpdateRequest struct {
+	Message string `json:"message" validate:"required"`
+}
+
 type CommentResponse struct {
 	ID      uint   `json:"id"`
 	Message string `json:"message"`

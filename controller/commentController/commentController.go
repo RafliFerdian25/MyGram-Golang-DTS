@@ -102,54 +102,55 @@ func (c *CommentController) GetCommentByID(ctx *gin.Context) {
 }
 
 // update comment
-// func (p *CommentController) UpdateComment(ctx *gin.Context) {
-// 	paramCommentID := ctx.Param("id")
-// 	commentID, err := strconv.Atoi(paramCommentID)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, gin.H{
-// 			"message": "Invalid comment id",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+func (p *CommentController) UpdateComment(ctx *gin.Context) {
+	paramCommentID := ctx.Param("id")
+	commentID, err := strconv.Atoi(paramCommentID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid comment id",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	var commentRequest model.CommentRequest
-// 	err = ctx.Bind(&commentRequest)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{
-// 			"message": "fail bind data",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+	// bind data comment
+	var commentRequest model.CommentUpdateRequest
+	err = ctx.Bind(&commentRequest)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail bind data",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	// validate data comment
-// 	validator := helper.NewValidator()
-// 	err = validator.Validate(commentRequest)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, gin.H{
-// 			"message": "Invalid request format",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+	// validate data comment
+	validator := helper.NewValidator()
+	err = validator.Validate(commentRequest)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request format",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	// get comment data from token
-// 	userData := ctx.MustGet("userData").(jwt.MapClaims)
-// 	userID := uint(userData["id"].(float64))
+	// get comment data from token
+	userData := ctx.MustGet("userData").(jwt.MapClaims)
+	userID := uint(userData["id"].(float64))
 
-// 	// call service to update comment
-// 	commentResponse, err := p.CommentService.UpdateComment(commentRequest, uint(commentID), userID)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{
-// 			"message": "fail update comment",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+	// call service to update comment
+	commentResponse, err := p.CommentService.UpdateComment(commentRequest, uint(commentID), userID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail update comment",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	ctx.JSON(http.StatusOK, commentResponse)
-// }
+	ctx.JSON(http.StatusOK, commentResponse)
+}
 
 // delete comment
 // func (p *CommentController) DeleteComment(ctx *gin.Context) {

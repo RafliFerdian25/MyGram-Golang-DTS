@@ -80,27 +80,27 @@ func (c *CommentService) GetCommentByID(commentID uint) (model.CommentGetRespons
 }
 
 // update comment
-// func (p *CommentService) UpdateComment(commentRequest model.CommentRequest, commentID uint, userID uint) (model.CommentResponse, error) {
-// 	// check if comment belongs to user
-// 	err := c.CheckCommentOwner(commentID, userID)
-// 	if err != nil {
-// 		return model.CommentResponse{}, err
-// 	}
+func (c *CommentService) UpdateComment(commentRequest model.CommentUpdateRequest, commentID uint, userID uint) (model.CommentResponse, error) {
+	// check if comment belongs to user
+	// err := c.CheckCommentOwner(commentID, userID)
+	// if err != nil {
+	// 	return model.CommentResponse{}, err
+	// }
 
-// 	// call repository to update comment
-// 	updatedComment, err := c.commentRepo.UpdateComment(commentRequest, commentID)
-// 	if err != nil {
-// 		return model.CommentResponse{}, err
-// 	}
+	// call repository to update comment
+	updatedComment, err := c.commentRepo.UpdateComment(commentRequest, commentID)
+	if err != nil {
+		return model.CommentResponse{}, err
+	}
 
-// 	var commentResponse model.CommentResponse
-// 	err = copier.Copy(&commentResponse, &updatedComment)
-// 	if err != nil {
-// 		return model.CommentResponse{}, err
-// 	}
+	var commentResponse model.CommentResponse
+	err = copier.Copy(&commentResponse, &updatedComment)
+	if err != nil {
+		return model.CommentResponse{}, err
+	}
 
-// 	return commentResponse, nil
-// }
+	return commentResponse, nil
+}
 
 // delete comment
 // func (p *CommentService) DeleteComment(commentID uint, userID uint) error {
@@ -119,13 +119,13 @@ func (c *CommentService) GetCommentByID(commentID uint) (model.CommentGetRespons
 // 	return nil
 // }
 
-// func (p *CommentService) CheckCommentOwner(commentID uint, userID uint) error {
-// 	comment, err := c.commentRepo.GetCommentByID(commentID)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	if comment.UserID != userID {
-// 		return errors.New("comment not belongs to user")
-// 	}
-// 	return nil
-// }
+func (c *CommentService) CheckCommentOwner(commentID uint, userID uint) error {
+	comment, err := c.commentRepo.GetCommentByID(commentID)
+	if err != nil {
+		return err
+	}
+	if comment.UserID != userID {
+		return errors.New("comment not belongs to user")
+	}
+	return nil
+}
