@@ -135,12 +135,8 @@ func (p *CommentController) UpdateComment(ctx *gin.Context) {
 		return
 	}
 
-	// get comment data from token
-	userData := ctx.MustGet("userData").(jwt.MapClaims)
-	userID := uint(userData["id"].(float64))
-
 	// call service to update comment
-	commentResponse, err := p.CommentService.UpdateComment(commentRequest, uint(commentID), userID)
+	commentResponse, err := p.CommentService.UpdateComment(commentRequest, uint(commentID))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "fail update comment",
@@ -165,11 +161,7 @@ func (p *CommentController) DeleteComment(ctx *gin.Context) {
 		return
 	}
 
-	// get user data from token
-	userData := ctx.MustGet("userData").(jwt.MapClaims)
-	userID := uint(userData["id"].(float64))
-
-	err = p.CommentService.DeleteComment(uint(commentID), userID)
+	err = p.CommentService.DeleteComment(uint(commentID))
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "fail delete comment",

@@ -80,13 +80,7 @@ func (c *CommentService) GetCommentByID(commentID uint) (model.CommentGetRespons
 }
 
 // update comment
-func (c *CommentService) UpdateComment(commentRequest model.CommentUpdateRequest, commentID uint, userID uint) (model.CommentResponse, error) {
-	// check if comment belongs to user
-	// err := c.CheckCommentOwner(commentID, userID)
-	// if err != nil {
-	// 	return model.CommentResponse{}, err
-	// }
-
+func (c *CommentService) UpdateComment(commentRequest model.CommentUpdateRequest, commentID uint) (model.CommentResponse, error) {
 	// call repository to update comment
 	updatedComment, err := c.commentRepo.UpdateComment(commentRequest, commentID)
 	if err != nil {
@@ -103,15 +97,9 @@ func (c *CommentService) UpdateComment(commentRequest model.CommentUpdateRequest
 }
 
 // delete comment
-func (c *CommentService) DeleteComment(commentID uint, userID uint) error {
-	// check if comment belongs to user
-	err := c.CheckCommentOwner(commentID, userID)
-	if err != nil {
-		return err
-	}
-
+func (c *CommentService) DeleteComment(commentID uint) error {
 	// call repository to delete comment
-	err = c.commentRepo.DeleteComment(commentID)
+	err := c.commentRepo.DeleteComment(commentID)
 	if err != nil {
 		return err
 	}
