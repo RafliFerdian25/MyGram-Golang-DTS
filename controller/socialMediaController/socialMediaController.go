@@ -105,55 +105,51 @@ func (c *SocialMediaController) GetSocialMediaByID(ctx *gin.Context) {
 }
 
 // update socialMedia
-// func (p *SocialMediaController) UpdateSocialMedia(ctx *gin.Context) {
-// 	paramSocialMediaID := ctx.Param("id")
-// 	socialMediaID, err := strconv.Atoi(paramSocialMediaID)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, gin.H{
-// 			"message": "Invalid socialMedia id",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+func (p *SocialMediaController) UpdateSocialMedia(ctx *gin.Context) {
+	paramSocialMediaID := ctx.Param("id")
+	socialMediaID, err := strconv.Atoi(paramSocialMediaID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid socialMedia id",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	// bind data socialMedia
-// 	var socialMediaRequest model.SocialMediaUpdateRequest
-// 	err = ctx.Bind(&socialMediaRequest)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{
-// 			"message": "fail bind data",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+	// bind data socialMedia
+	var socialMediaRequest model.SocialMediaRequest
+	err = ctx.Bind(&socialMediaRequest)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail bind data",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	// validate data socialMedia
-// 	validator := helper.NewValidator()
-// 	err = validator.Validate(socialMediaRequest)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, gin.H{
-// 			"message": "Invalid request format",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+	// validate data socialMedia
+	validator := helper.NewValidator()
+	err = validator.Validate(socialMediaRequest)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid request format",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	// get socialMedia data from token
-// 	userData := ctx.MustGet("userData").(jwt.MapClaims)
-// 	userID := uint(userData["id"].(float64))
+	// call service to update socialMedia
+	socialMediaResponse, err := p.SocialMediaService.UpdateSocialMedia(socialMediaRequest, uint(socialMediaID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail update socialMedia",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	// call service to update socialMedia
-// 	socialMediaResponse, err := p.SocialMediaService.UpdateSocialMedia(socialMediaRequest, uint(socialMediaID), userID)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{
-// 			"message": "fail update socialMedia",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
-
-// 	ctx.JSON(http.StatusOK, socialMediaResponse)
-// }
+	ctx.JSON(http.StatusOK, socialMediaResponse)
+}
 
 // delete socialMedia
 // func (p *SocialMediaController) DeleteSocialMedia(ctx *gin.Context) {

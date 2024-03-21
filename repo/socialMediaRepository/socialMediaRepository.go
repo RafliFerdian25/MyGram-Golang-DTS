@@ -51,21 +51,22 @@ func (c *SocialMediaRepository) GetSocialMediaByID(socialMediaID uint) (model.So
 }
 
 // UpdateSocialMedia implements SocialMediaRepository
-// func (c *SocialMediaRepository) UpdateSocialMedia(socialMediaRequest model.SocialMediaUpdateRequest, socialMediaID uint) (model.SocialMedia, error) {
-// 	var socialMediaModel model.SocialMedia
-// 	err := c.db.First(&socialMediaModel, socialMediaID).Error
-// 	if err != nil {
-// 		return model.SocialMedia{}, err
-// 	}
+func (c *SocialMediaRepository) UpdateSocialMedia(socialMediaRequest model.SocialMediaRequest, socialMediaID uint) (model.SocialMedia, error) {
+	var socialMediaModel model.SocialMedia
+	err := c.db.First(&socialMediaModel, socialMediaID).Error
+	if err != nil {
+		return model.SocialMedia{}, err
+	}
 
-// 	socialMediaModel.Message = socialMediaRequest.Message
+	socialMediaModel.Name = socialMediaRequest.Name
+	socialMediaModel.SocialMediaUrl = socialMediaRequest.SocialMediaUrl
 
-// 	err = c.db.Save(&socialMediaModel).Error
-// 	if err != nil {
-// 		return model.SocialMedia{}, err
-// 	}
-// 	return socialMediaModel, nil
-// }
+	err = c.db.Save(&socialMediaModel).Error
+	if err != nil {
+		return model.SocialMedia{}, err
+	}
+	return socialMediaModel, nil
+}
 
 // DeleteSocialMedia implements SocialMediaRepository
 // func (u *SocialMediaRepository) DeleteSocialMedia(socialMediaID uint) error {

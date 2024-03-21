@@ -71,27 +71,21 @@ func (c *SocialMediaService) GetSocialMediaByID(socialMediaID uint) (model.Socia
 }
 
 // update socialMedia
-// func (c *SocialMediaService) UpdateSocialMedia(socialMediaRequest model.SocialMediaUpdateRequest, socialMediaID uint, userID uint) (model.SocialMediaResponse, error) {
-// 	// check if socialMedia belongs to user
-// 	// err := c.CheckSocialMediaOwner(socialMediaID, userID)
-// 	// if err != nil {
-// 	// 	return model.SocialMediaResponse{}, err
-// 	// }
+func (c *SocialMediaService) UpdateSocialMedia(socialMediaRequest model.SocialMediaRequest, socialMediaID uint) (model.SocialMediaResponse, error) {
+	// call repository to update socialMedia
+	updatedSocialMedia, err := c.socialMediaRepo.UpdateSocialMedia(socialMediaRequest, socialMediaID)
+	if err != nil {
+		return model.SocialMediaResponse{}, err
+	}
 
-// 	// call repository to update socialMedia
-// 	updatedSocialMedia, err := c.socialMediaRepo.UpdateSocialMedia(socialMediaRequest, socialMediaID)
-// 	if err != nil {
-// 		return model.SocialMediaResponse{}, err
-// 	}
+	var socialMediaResponse model.SocialMediaResponse
+	err = copier.Copy(&socialMediaResponse, &updatedSocialMedia)
+	if err != nil {
+		return model.SocialMediaResponse{}, err
+	}
 
-// 	var socialMediaResponse model.SocialMediaResponse
-// 	err = copier.Copy(&socialMediaResponse, &updatedSocialMedia)
-// 	if err != nil {
-// 		return model.SocialMediaResponse{}, err
-// 	}
-
-// 	return socialMediaResponse, nil
-// }
+	return socialMediaResponse, nil
+}
 
 // delete socialMedia
 // func (c *SocialMediaService) DeleteSocialMedia(socialMediaID uint, userID uint) error {
