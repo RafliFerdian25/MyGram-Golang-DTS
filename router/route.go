@@ -3,13 +3,16 @@ package routes
 import (
 	"MyGram-Golang-DTS/controller/commentController"
 	"MyGram-Golang-DTS/controller/photoController"
+	"MyGram-Golang-DTS/controller/socialMediaController"
 	"MyGram-Golang-DTS/controller/userController"
 	"MyGram-Golang-DTS/middleware"
 	"MyGram-Golang-DTS/repo/commentRepository"
 	"MyGram-Golang-DTS/repo/photoRepository"
+	"MyGram-Golang-DTS/repo/socialMediaRepository"
 	"MyGram-Golang-DTS/repo/userRepository"
 	"MyGram-Golang-DTS/service/commentService"
 	"MyGram-Golang-DTS/service/photoService"
+	"MyGram-Golang-DTS/service/socialMediaService"
 	"MyGram-Golang-DTS/service/userService"
 
 	"github.com/gin-gonic/gin"
@@ -22,16 +25,19 @@ func New(db *gorm.DB) *gin.Engine {
 	userRepository := userRepository.NewUserRepository(db)
 	photoRepository := photoRepository.NewPhotoRepository(db)
 	commentRepository := commentRepository.NewCommentRepository(db)
+	socialMediaRepository := socialMediaRepository.NewSocialMediaRepository(db)
 
 	// Services
 	userService := userService.NewUserService(userRepository)
 	photoService := photoService.NewPhotoService(photoRepository)
 	commentService := commentService.NewCommentService(commentRepository, photoRepository)
+	socialMediaService := socialMediaService.NewSocialMediaService(socialMediaRepository)
 
 	// Controllers
 	userController := userController.NewUserController(userService)
 	photoController := photoController.NewPhotoController(photoService)
 	commentController := commentController.NewCommentController(commentService)
+	socialMediasController := socialMediaController.NewSocialMediaController(socialMediaService)
 
 	app := gin.Default()
 
@@ -51,6 +57,7 @@ func New(db *gorm.DB) *gin.Engine {
 		users.DELETE("/", userController.DeleteUser)
 	}
 
+	// Photo Routes
 	photos := app.Group("/photos")
 	photos.Use(middleware.Authentication())
 	{
@@ -61,6 +68,7 @@ func New(db *gorm.DB) *gin.Engine {
 		photos.DELETE("/:id", photoController.DeletePhoto)
 	}
 
+	// Comment Routes
 	comments := app.Group("/comments")
 	comments.Use(middleware.Authentication())
 	{
@@ -69,6 +77,15 @@ func New(db *gorm.DB) *gin.Engine {
 		comments.GET("/:id", commentController.GetCommentByID)
 		comments.PUT("/:id", middleware.CommentAuthorization(commentService), commentController.UpdateComment)
 		comments.DELETE("/:id", middleware.CommentAuthorization(commentService), commentController.DeleteComment)
+	}
+
+	// Social Media Routes
+	socialMedias := app.Group("/socialmedias")
+	socialMedias.Use(middleware.Authentication())
+	{
+		socialMedias.POST("/", socialMediasController.CreateSocialMedia)
+		// socialMedias.GET("/", socialMediasController.GetAllSocialMedias)
+		// socialMedias.GET("/:id", socialMediasController.GetSocialMediaByID)
 	}
 
 	return app
