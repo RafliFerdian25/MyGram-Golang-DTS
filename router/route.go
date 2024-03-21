@@ -66,7 +66,7 @@ func New(db *gorm.DB) *gin.Engine {
 	{
 		comments.POST("/", commentController.CreateComment)
 		comments.GET("/", commentController.GetAllComments)
-		// comments.GET("/:id", commentController.GetCommentByID)
+		comments.GET("/:id", commentController.GetCommentByID)
 		// comments.PUT("/:id", commentController.UpdateComment)
 		// comments.DELETE("/:id", commentController.DeleteComment)
 	}

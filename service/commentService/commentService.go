@@ -63,21 +63,21 @@ func (c *CommentService) GetAllComments() ([]model.CommentGetResponse, error) {
 }
 
 // get comment by id
-// func (p *CommentService) GetCommentByID(commentID uint) (model.CommentGetResponse, error) {
-// 	// call repository to get comment by id
-// 	comment, err := c.commentRepo.GetCommentByID(commentID)
-// 	if err != nil {
-// 		return model.CommentGetResponse{}, err
-// 	}
+func (c *CommentService) GetCommentByID(commentID uint) (model.CommentGetResponse, error) {
+	// call repository to get comment by id
+	comment, err := c.commentRepo.GetCommentByID(commentID)
+	if err != nil {
+		return model.CommentGetResponse{}, err
+	}
 
-// 	var commentResponse model.CommentGetResponse
-// 	err = copier.Copy(&commentResponse, &comment)
-// 	if err != nil {
-// 		return model.CommentGetResponse{}, err
-// 	}
+	var commentResponse model.CommentGetResponse
+	err = copier.Copy(&commentResponse, &comment)
+	if err != nil {
+		return model.CommentGetResponse{}, err
+	}
 
-// 	return commentResponse, nil
-// }
+	return commentResponse, nil
+}
 
 // update comment
 // func (p *CommentService) UpdateComment(commentRequest model.CommentRequest, commentID uint, userID uint) (model.CommentResponse, error) {

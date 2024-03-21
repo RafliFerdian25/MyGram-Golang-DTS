@@ -41,14 +41,14 @@ func (u *CommentRepository) GetAllComments() ([]model.CommentGetModel, error) {
 }
 
 // GetCommentByID implements CommentRepository
-// func (u *CommentRepository) GetCommentByID(commentID uint) (model.CommentGetModel, error) {
-// 	var comment model.CommentGetModel
-// 	err := u.db.Model(&model.Comment{}).Preload("User").First(&comment, commentID).Error
-// 	if err != nil {
-// 		return model.CommentGetModel{}, err
-// 	}
-// 	return comment, nil
-// }
+func (u *CommentRepository) GetCommentByID(commentID uint) (model.CommentGetModel, error) {
+	var comment model.CommentGetModel
+	err := u.db.Model(&model.Comment{}).Preload("User").Preload("Photo").First(&comment, commentID).Error
+	if err != nil {
+		return model.CommentGetModel{}, err
+	}
+	return comment, nil
+}
 
 // UpdateComment implements CommentRepository
 // func (u *CommentRepository) UpdateComment(comment model.CommentRequest, commentID uint) (model.Comment, error) {

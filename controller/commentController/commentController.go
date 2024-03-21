@@ -4,6 +4,7 @@ import (
 	"MyGram-Golang-DTS/helper"
 	"MyGram-Golang-DTS/model"
 	"MyGram-Golang-DTS/service/commentService"
+	"strconv"
 
 	"net/http"
 
@@ -77,28 +78,28 @@ func (p *CommentController) GetAllComments(ctx *gin.Context) {
 }
 
 // get comment by id
-// func (p *CommentController) GetCommentByID(ctx *gin.Context) {
-// 	paramCommentID := ctx.Param("id")
-// 	commentID, err := strconv.Atoi(paramCommentID)
-// 	if err != nil {
-// 		ctx.JSON(http.StatusBadRequest, gin.H{
-// 			"message": "Invalid comment id",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+func (c *CommentController) GetCommentByID(ctx *gin.Context) {
+	paramCommentID := ctx.Param("id")
+	commentID, err := strconv.Atoi(paramCommentID)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": "Invalid comment id",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	comment, err := p.CommentService.GetCommentByID(uint(commentID))
-// 	if err != nil {
-// 		ctx.JSON(http.StatusInternalServerError, gin.H{
-// 			"message": "fail get comment",
-// 			"error":   err.Error(),
-// 		})
-// 		return
-// 	}
+	comment, err := c.CommentService.GetCommentByID(uint(commentID))
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "fail get comment",
+			"error":   err.Error(),
+		})
+		return
+	}
 
-// 	ctx.JSON(http.StatusOK, comment)
-// }
+	ctx.JSON(http.StatusOK, comment)
+}
 
 // update comment
 // func (p *CommentController) UpdateComment(ctx *gin.Context) {
