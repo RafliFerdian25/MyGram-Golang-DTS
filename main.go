@@ -2,11 +2,9 @@ package main
 
 import (
 	"MyGram-Golang-DTS/database"
-	routes "MyGram-Golang-DTS/router"
+	"MyGram-Golang-DTS/helper"
+	"MyGram-Golang-DTS/routes"
 	"log"
-	"os"
-
-	"github.com/joho/godotenv"
 )
 
 func main() {
@@ -22,13 +20,8 @@ func main() {
 		panic(err)
 	}
 
-	app := routes.New(db)
+	app := routes.NewRoute(db)
 
-	err = godotenv.Load(".env")
-	if err != nil {
-		log.Fatal("Error loading .env file", err)
-	}
-
-	apiPort := os.Getenv("API_PORT")
+	apiPort := helper.ConfigValue("API_PORT")
 	log.Fatal(app.Run(apiPort))
 }

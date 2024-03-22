@@ -19,7 +19,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func New(db *gorm.DB) *gin.Engine {
+func NewRoute(db *gorm.DB) *gin.Engine {
 
 	// Repositories
 	userRepository := userRepository.NewUserRepository(db)

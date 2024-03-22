@@ -2,7 +2,6 @@ package helper
 
 import (
 	"errors"
-	"os"
 	"strings"
 	"time"
 
@@ -10,7 +9,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var SECRETKEY string = os.Getenv("SECRETKEY")
+var SECRETKEY string = ConfigValue("SECRETKEY")
 
 func GenerateToken(id uint, email string) (string, error) {
 	claims := jwt.MapClaims{
