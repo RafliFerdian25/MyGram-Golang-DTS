@@ -8,7 +8,7 @@ type Photo struct {
 	Caption  string    `json:"caption" gorm:"size:200"`
 	PhotoUrl string    `json:"photo_url" gorm:"not null"`
 	UserID   uint      `json:"user_id" gorm:"not null"`
-	Comments []Comment `json:"comments"`
+	Comments []Comment `json:"comments" gorm:"foreignKey:PhotoID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }
 
 type PhotoRequest struct {

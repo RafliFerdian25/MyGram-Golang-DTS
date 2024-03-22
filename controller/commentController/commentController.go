@@ -10,6 +10,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"gorm.io/gorm"
 )
 
 type CommentController struct {
@@ -53,6 +54,12 @@ func (c *CommentController) CreateComment(ctx *gin.Context) {
 	// call service to create comment
 	commentResponse, err := c.CommentService.CreateComment(commentRequest)
 	if err != nil {
+		if err.Error() == "photo not found" {
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"message": "photo not found",
+			})
+			return
+		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "fail create comment",
 			"error":   err.Error(),
@@ -91,6 +98,12 @@ func (c *CommentController) GetCommentByID(ctx *gin.Context) {
 
 	comment, err := c.CommentService.GetCommentByID(uint(commentID))
 	if err != nil {
+		if err.Error() == gorm.ErrRecordNotFound.Error() {
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"message": "comment not found",
+			})
+			return
+		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "fail get comment",
 			"error":   err.Error(),
