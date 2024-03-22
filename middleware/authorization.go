@@ -38,8 +38,8 @@ func CommentAuthorization(commentService *commentService.CommentService) gin.Han
 				})
 				return
 			}
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"message": "Unauthorized",
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+				"message": "Forbidden",
 				"error":   err.Error(),
 			})
 			return
@@ -55,7 +55,7 @@ func PhotoAuthorization(photoService *photoService.PhotoService) gin.HandlerFunc
 		photoID, err := strconv.Atoi(ctx.Param("photoId"))
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-				"message": "Invalid id social media",
+				"message": "Invalid id photo",
 				"error":   err.Error(),
 			})
 			return
@@ -75,8 +75,8 @@ func PhotoAuthorization(photoService *photoService.PhotoService) gin.HandlerFunc
 				})
 				return
 			}
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"message": "Unauthorized",
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+				"message": "Forbidden",
 				"error":   err.Error(),
 			})
 			return
@@ -112,8 +112,8 @@ func SocialMediaAuthorization(socialMediaService *socialMediaService.SocialMedia
 				})
 				return
 			}
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"message": "Unauthorized",
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+				"message": "Forbidden",
 				"error":   err.Error(),
 			})
 			return
