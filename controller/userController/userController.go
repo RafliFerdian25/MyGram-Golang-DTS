@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
+	"gorm.io/gorm"
 )
 
 type UserController struct {
@@ -154,6 +155,13 @@ func (u *UserController) DeleteUser(ctx *gin.Context) {
 
 	err := u.UserService.DeleteUser(userID)
 	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"message": "user not found",
+				"error":   err.Error(),
+			})
+			return
+		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "fail delete user",
 			"error":   err.Error(),

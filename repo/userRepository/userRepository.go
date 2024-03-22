@@ -67,9 +67,12 @@ func (u *UserRepository) UpdateUser(userRequest model.UserUpdateRequest, userID 
 
 // DeleteUser implements UserRepository
 func (u *UserRepository) DeleteUser(userID uint) error {
-	err := u.db.Unscoped().Delete(&model.User{}, userID).Error
+	err := u.db.Unscoped().Delete(&model.User{}, userID)
 	if err != nil {
-		return err
+		if err.RowsAffected == 0 {
+			return gorm.ErrRecordNotFound
+		}
+		return err.Error
 	}
 	return nil
 }
