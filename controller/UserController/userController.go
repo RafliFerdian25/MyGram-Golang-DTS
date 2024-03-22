@@ -46,6 +46,13 @@ func (u *UserController) CreateUser(ctx *gin.Context) {
 
 	userResponse, err := u.UserService.CreateUser(userRequest)
 	if err != nil {
+		if err.Error() == "email already exists" || err.Error() == "username already exists" {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"message": "fail create user",
+				"error":   err.Error(),
+			})
+			return
+		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "fail create user",
 			"error":   err.Error(),
@@ -124,6 +131,13 @@ func (u *UserController) UpdateUser(ctx *gin.Context) {
 	// call service to update user
 	userResponse, err := u.UserService.UpdateUser(userRequest, userID)
 	if err != nil {
+		if err.Error() == "email already exists" || err.Error() == "username already exists" {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"message": "fail create user",
+				"error":   err.Error(),
+			})
+			return
+		}
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message": "fail update user",
 			"error":   err.Error(),
