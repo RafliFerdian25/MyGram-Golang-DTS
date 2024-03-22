@@ -71,12 +71,6 @@ func (p *PhotoService) GetPhotoByID(photoID uint) (model.PhotoGetResponse, error
 
 // update photo
 func (p *PhotoService) UpdatePhoto(photoRequest model.PhotoRequest, photoID uint, userID uint) (model.PhotoResponse, error) {
-	// check if photo belongs to user
-	err := p.CheckPhotoOwner(photoID, userID)
-	if err != nil {
-		return model.PhotoResponse{}, err
-	}
-
 	// call repository to update photo
 	updatedPhoto, err := p.photoRepo.UpdatePhoto(photoRequest, photoID)
 	if err != nil {
@@ -94,14 +88,8 @@ func (p *PhotoService) UpdatePhoto(photoRequest model.PhotoRequest, photoID uint
 
 // delete photo
 func (p *PhotoService) DeletePhoto(photoID uint, userID uint) error {
-	// check if photo belongs to user
-	err := p.CheckPhotoOwner(photoID, userID)
-	if err != nil {
-		return err
-	}
-
 	// call repository to delete photo
-	err = p.photoRepo.DeletePhoto(photoID)
+	err := p.photoRepo.DeletePhoto(photoID)
 	if err != nil {
 		return err
 	}

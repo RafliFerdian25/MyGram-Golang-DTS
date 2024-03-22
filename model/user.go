@@ -18,7 +18,7 @@ type UserRequest struct {
 	Username        string `json:"username" form:"username" validate:"required"`
 	Email           string `json:"email" form:"email" validate:"required,email"`
 	Password        string `json:"password" form:"password" validate:"required,min=6"`
-	Age             int    `json:"age" form:"age" validate:"required,numeric,gt=8"`
+	Age             int    `json:"age" form:"age" validate:"required,numeric,gte=8"`
 	ProfileImageUrl string `json:"profile_image_url" form:"profile_image_url" validate:"omitempty,url"`
 }
 
@@ -43,6 +43,6 @@ type UserLoginRequest struct {
 type UserUpdateRequest struct {
 	Username        string `json:"username" form:"username" validate:"required"`
 	Email           string `json:"email" form:"email" validate:"required,email"`
-	Age             int    `json:"age" form:"age" validate:"required,numeric,gt=8"`
+	Age             int    `json:"age" form:"age" validate:"required,numeric,gte=8"`
 	ProfileImageUrl string `json:"profile_image_url" form:"profile_image_url" validate:"omitempty,url"`
 }
