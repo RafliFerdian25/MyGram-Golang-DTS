@@ -1,0 +1,1 @@
+public API URL = [text](https://mygram-golang-dts-production.up.railway.app/)
