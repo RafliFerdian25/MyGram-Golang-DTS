@@ -1,1 +1,1 @@
-public API URL = [text](https://mygram-golang-dts-production.up.railway.app/)
+public API URL = [API URL](https://mygram-golang-dts-production.up.railway.app/)
