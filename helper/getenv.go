@@ -14,6 +14,5 @@ func ConfigValue(key string) string {
 	if err != nil {
 		fmt.Print("Error loading .env file", err)
 	}
-	fmt.Println(os.Getenv("API_PORT"))
 	return os.Getenv(key)
 }
