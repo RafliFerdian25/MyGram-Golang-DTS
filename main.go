@@ -22,6 +22,6 @@ func main() {
 
 	app := routes.NewRoute(db)
 
-	apiPort := helper.ConfigValue("API_PORT")
-	log.Fatal(app.Run(apiPort))
+	apiPort := helper.ConfigValue("PORT")
+	log.Fatal(app.Run(":" + apiPort))
 }
